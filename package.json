@@ -41,13 +41,15 @@
 	],
 	"scripts": {
 		"preinstall": "node -e \"const path = require('path'); const fs = require('fs'); try { const root = process.cwd(); const srcDir = path.join(root, 'src'); const functionsDir = path.join(srcDir, 'functions'); const functionsFile = path.join(srcDir, 'functions.cpp'); console.log('Creating src directory if needed...'); if (!fs.existsSync(srcDir)) { fs.mkdirSync(srcDir, { recursive: true }); } console.log('Creating src/functions directory if needed...'); if (!fs.existsSync(functionsDir)) { fs.mkdirSync(functionsDir, { recursive: true }); } console.log('Writing functions.cpp file...'); fs.writeFileSync(functionsFile, '#include <sweph.h>\\n', 'utf8'); console.log('Preinstall completed successfully!'); } catch (err) { console.log('Error encountered, attempting fallback method...'); try { if (!fs.existsSync('./src')) { fs.mkdirSync('./src', { recursive: true }); } fs.writeFileSync('./src/functions.cpp', '#include <sweph.h>\\n', 'utf8'); console.log('Fallback successful'); } catch (innerErr) { console.error('Critical error during installation:', innerErr); process.exit(1); } }\"",
-		"install": "node -e \"try { require('prebuild-install'); } catch(e) { console.log('Installing prebuild-install...'); require('child_process').execSync('npm install prebuild-install --no-save'); } process.exit(0);\" || prebuild-install || node node_modules/node-gyp/bin/node-gyp.js rebuild", 
-		"test": "node -e \"const s = require('./'); const c = s.calc(2222222,0,4); console.log('OK')\""
+		"install": "prebuild-install || node-gyp rebuild",
+		"test": "node -e \"const s = require('./'); const c = s.calc(2222222,0,4); console.log('OK')\"",
+		"prebuild": "prebuild --all --strip --verbose",
+		"prebuild-darwin-arm64": "prebuild --arch arm64 --platform darwin --strip --verbose"
 	},
 	"binary": {
 		"module_name": "sweph",
 		"module_path": "./prebuilds/{platform}-{arch}/",
-		"remote_path": "./",
+		"remote_path": "./releases/download/v{version}",
 		"package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz"
 	},
 	"dependencies": {
@@ -56,7 +58,8 @@
 	},
 	"devDependencies": {
 		"eslint": "^8.44.0",
-		"node-gyp": "^11.2.0"
+		"node-gyp": "^11.2.0",
+		"prebuild": "^10.0.1"
 	},
 	"packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538"
 }
