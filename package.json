@@ -44,7 +44,7 @@
 		"install": "prebuild-install || node-gyp rebuild", 
 		"test": "node -e \"const s = require('./'); const c = s.calc(2222222,0,4); console.log('OK')\""
 	},
-	"binary": { // <-- Add this section
+	"binary": {
 		"module_name": "sweph",
 		"module_path": "./prebuilds/{platform}-{arch}/",
 		"remote_path": "./",
